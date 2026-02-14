@@ -1,0 +1,15 @@
+model: gemini-2.5-pro
+api: google
+temperature: null
+top_p: null
+concurrent_requests: 8
+max_tokens: 130000
+read_cost: 1.25
+tool_choice: auto
+write_cost: 10.00
+date: "2025-06-17"
+extra_body:
+  extra_body:
+    google:
+      thinking_config:
+        include_thoughts: true

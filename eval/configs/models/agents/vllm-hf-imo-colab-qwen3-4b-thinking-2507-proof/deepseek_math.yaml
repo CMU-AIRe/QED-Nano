@@ -1,0 +1,4 @@
+type: agent
+model_config: models/vllm/vllm-lm-provers-qwen3-4b-thinking-2507-proof
+scaffold_config: agents/deepseek_math
+human_readable_id: "lm-provers/Qwen3-4B-Thinking-2507-Proof + deepseek_math (rc_v09.00-step-000200)"

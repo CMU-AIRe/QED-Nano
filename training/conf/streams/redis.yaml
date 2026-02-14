@@ -1,0 +1,5 @@
+backend: redis
+# will be populated by the launcher
+host: null
+port: 11000
+save: "3600 1"

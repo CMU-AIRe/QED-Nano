@@ -1,0 +1,19 @@
+You are given a maths problem. You may also be given a summary of a previous attempt to solve it. This previous attempt may or may not be correct.
+
+### PROBLEM
+{problem}
+
+### SUMMARY OF PREVIOUS ATTEMPT
+{curr_summary}
+
+### INSTRUCTIONS
+If no summary of a previous attempt is provided, solve the problem from scratch.
+
+If a summary of a previous attempt is provided, your task is to improve upon this attempt. You should rely on this summary to guide your thinking.
+Some strategies you could use include:
+- Verifying the previous solution.
+- Proving the result in a different way.
+- Finding alternative problem-solving strategies.
+- Continuing from where the previous solution left off, assuming that the previous solution is incomplete.
+
+Reason step-by-step and return your final answer in \\boxed{{}}.

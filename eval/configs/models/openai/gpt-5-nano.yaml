@@ -1,0 +1,11 @@
+model: gpt-5-nano--minimal
+api: openai
+max_tokens: 128000
+read_cost: 0.05
+write_cost: 0.4
+concurrent_requests: 32
+temperature: null
+top_p: null
+use_openai_responses_api: true
+reasoning:
+  summary: "auto"

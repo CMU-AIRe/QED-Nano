@@ -1,0 +1,4 @@
+type: agent
+model_config: models/workflows/vllm_agent
+scaffold_config: agents/reasoning_cache
+human_readable_id: "lm-provers/QED-Nano + reasoning_cache"

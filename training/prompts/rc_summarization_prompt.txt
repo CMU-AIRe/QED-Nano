@@ -1,0 +1,20 @@
+You are given a maths problem and a candidate solution to it. You may also be given a summary of a previous candidate solution to the problem. If this is provided, you may assume that the current candidate solution was generated conditioned on the summary of the previous candidate solution.
+Your task is to write a summary of the current candidate solution. 
+
+The new summary you generate should possess the following characteristics:
+- It should provide a detailed overview of what occurred in the current candidate solution. This may include a summary of the high-level problem-solving strategy, a description of theorems used, verification attempts, calculations and logical deductions etc.
+- It should summarize the current candidate solution in light of any previous summaries, if provided. We should be able to understand the relationship between the previous solution and the current solution by reading the summary. Make sure any important information contained in the existing summary is retained in the new one.
+- It should be no more than two paragraph long and written in paragraph form, without headers or subheaders.
+- It should be written in the first person, as if though it is being written by the person solving the problem.
+- The candidate solution may not be complete. In this case, the summary should still attempt to summarize the partial solution.
+
+IMPORTANT: Do not under any circumstances add any additional reasoning not contained in the latest reasoning step. Your task is only to summarize what is given to you.
+
+### PROBLEM
+{problem}
+
+### EXISTING SUMMARY
+{existing_summary}
+
+### LATEST CANDIDATE SOLUTION
+{reasoning}

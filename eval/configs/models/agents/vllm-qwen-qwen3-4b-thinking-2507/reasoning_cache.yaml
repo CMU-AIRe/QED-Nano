@@ -1,0 +1,4 @@
+type: agent
+model_config: models/vllm/vllm-qwen-qwen3-4b-thinking-2507
+scaffold_config: agents/reasoning_cache
+human_readable_id: "Qwen/Qwen3-4B-Thinking-2507 + reasoning_cache (main)"

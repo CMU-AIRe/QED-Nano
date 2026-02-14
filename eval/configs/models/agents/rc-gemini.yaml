@@ -1,0 +1,4 @@
+type: agent
+model_config: models/google/gemini-3-flash-low
+summarizer_model: models/google/gemini-3-flash-low
+scaffold_config: agents/reasoning_cache

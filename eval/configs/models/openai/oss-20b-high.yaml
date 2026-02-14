@@ -1,0 +1,7 @@
+model: "openai/gpt-oss-20b"
+api: together
+max_tokens: 95000
+read_cost: 0.15
+write_cost: 0.60
+concurrent_requests: 16
+reasoning_effort: high

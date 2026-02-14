@@ -1,0 +1,19 @@
+model: "openai/gpt-oss-20b"
+model_revision: "main"
+api: custom
+api_key_env: VLLM_API_KEY
+base_url: http://localhost:8000/v1
+max_tokens: 114688
+prompt_margin: 16384
+delimiters:
+- </think>  # covers most reasoning models
+- final<|message|> # gpt-oss models
+read_cost: 0.0
+write_cost: 0.0
+concurrent_requests: 16
+human_readable_id: openai/gpt-oss-20b
+date: "2026-02-06"
+reasoning_effort: high
+temperature: 1.0
+top_p: 1.0
+top_k: -1

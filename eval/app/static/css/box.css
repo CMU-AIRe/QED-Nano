@@ -1,0 +1,129 @@
+
+.box {
+  width: 95%;
+  margin: 0 0 1.5rem 0;
+  padding: 1.5rem;
+  /* Consistent padding */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Softer, slightly larger shadow */
+  max-height: 500px;
+  /* Increased max-height slightly */
+  margin-top: 20px;
+  /* Consistent top margin */
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #e0e0e0;
+  /* Default subtle border */
+  line-height: 1.6;
+  white-space: pre-wrap;
+  /* Preserve whitespace and wrap text */
+}
+
+
+.box.metadata-box {
+  border: 1px solid #e0e0e0;
+  /* Default subtle border */
+  line-height: 1.2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  background-color: #f3f3f3;
+  /* Lighter tint of #c7d9ff */
+  border-top: 4px solid #b8b8b8;
+  /* Preserve whitespace and wrap text */
+}
+
+.response-box {
+  background-color: #fff5e7;
+  /* Lighter tint of #ffe4c8 */
+  border-top: 4px solid #ffc993;
+  /* Original #ffe4c8 darkened */
+  color: #5a3e2b;
+  font-weight: normal;
+  color: #000000
+}
+
+
+
+.problem-box, .response-box.user {
+  background-color: #f0f5ff;
+  /* Lighter tint of #c7d9ff */
+  border-top: 4px solid #8eaadb;
+  /* Original #c7d9ff darkened */
+  color: #2c3e50;
+  max-height: 1000px;
+}
+
+.response-box.code {
+  background-color: #f3f3f3;
+  /* Lighter tint of #c7d9ff */
+  border-top: 4px solid #b8b8b8;
+  /* Original #c7d9ff darkened */
+  color: #2c3e50;
+  max-height: 500px;
+}
+
+.response-box.tool_response {
+  background-color: #fbf4ff;
+  /* Lighter tint of #c7d9ff */
+  border-top: 4px solid #e2b3fd;
+  /* Original #c7d9ff darkened */
+  color: #2c3e50;
+  max-height: 500px;
+}
+
+.response-box.cot {
+  background-color: #fffaf0;
+  border-top: 4px solid #ffdab9;
+}
+
+.solution-box {
+  background-color: #f0fff0;
+  /* Lighter tint of #c7ffcb */
+  border-top: 4px solid #8ee094;
+  /* Original #c7ffcb darkened */
+  color: #1e4620;
+}
+
+.grading-box, .description-box {
+  background-color: #f9f9f9;
+  /* Kept light grey */
+  border-top: 4px solid #cccccc;
+  color: #333333;
+}
+
+.user {
+  background-color: #d1bca5;
+}
+
+.assistant {
+  background-color: #ffe4c8;
+}
+
+.correct {
+  background-color: #f0fff0;
+  border-top: 4px solid #76c77b;
+}
+
+.incorrect, .issue-box {
+  background-color: #fff0f0;
+  border-top: 4px solid #ff8a80;
+}
+
+.semicorrect {
+  background-color: #fff9f0;
+  border-top: 4px solid #ffd9a0;
+}
+
+.strong {
+    font-weight: 600;
+    
+}
+
+.tagline {
+    margin-bottom: -10px;
+    margin-top: 1rem;
+    font-weight: 600;
+}

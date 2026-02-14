@@ -1,0 +1,5 @@
+type: agent
+model_config: models/agents/rc-gemini
+verifier_model: models/agents/rc-gemini-minified
+improver_model: models/agents/rc-gemini-minified
+scaffold_config: agents/deepseek_math

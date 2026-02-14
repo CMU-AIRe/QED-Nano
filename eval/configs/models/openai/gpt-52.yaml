@@ -1,0 +1,12 @@
+model: gpt-5.2--high
+api: openai
+max_tokens: 110000
+read_cost: 1.25
+write_cost: 10
+concurrent_requests: 32
+temperature: null
+top_p: null
+use_openai_responses_api: true
+background: true
+reasoning:
+  summary: "auto"

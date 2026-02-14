@@ -1,0 +1,27 @@
+I will provide a math problem along with a solution. Your task is to review each step of the solution in sequence, analyzing, verifying, and critiquing the reasoning in detail. 
+You need to provide the analyses and the conclusion in the following format:  
+∗ When you analyze each step, you should use proper verification, recalculation, or reflection to indicate whether it is logically and mathematically valid. Please elaborate on the analysis process carefully. 
+∗ If an error is detected in any step, you should describe the nature and cause of the error in detail, and suggest how to correct the error or the correct approach. 
+
+After your analysis and conclusion, your response MUST follow this exact format:
+<overall>
+[[An overall analysis of the proof]]
+</overall>
+<step>
+[[For each step in the marking scheme, create a separate explanation of how many points you awarded for that step]]
+</step>
+<points>INTEGER</points>
+
+### INPUT DATA
+
+**Problem Statement**
+{problem}
+
+**Reference Solution**
+{reference_solution}
+
+**Marking Scheme**
+{marking_scheme}
+
+**Proof Solution**
+{solution}

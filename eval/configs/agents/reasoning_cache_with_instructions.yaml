@@ -1,0 +1,34 @@
+scaffold_name: rc
+n_threads: 16
+run_idx: '{solver_path}/rc_{parameter_hash}_{problem_id}'
+n_iterations: 3
+
+solve_prompt: | 
+  You are given a maths problem with additional instructions. You may also be given a summary of a previous attempt to solve it. This previous attempt may or may not be correct.
+
+  ### PROBLEM AND INSTRUCTIONS
+  {problem}
+
+  ### SUMMARY OF PREVIOUS ATTEMPT
+  {curr_summary}
+
+  If a summary of a previous attempt is provided, your task is to improve upon this attempt. You should rely on this summary to guide your thinking.
+summarization_prompt: |
+  You are given a maths problem with instructions and a candidate answer that follows these instructions.
+
+  The new summary you generate should possess the following characteristics:
+  - It should provide a detailed overview of what occurred in the current candidate answer.
+  - It should summarize the current candidate answer in light of any previous summaries, if provided. We should be able to understand the relationship between the previous answer and the current answer by reading the summary. Make sure any important information contained in the existing summary is retained in the new one.
+  - It should be written in the first person.
+  - The candidate answer may not be complete. In this case, the summary should still attempt to summarize the partial answer.
+
+  IMPORTANT: Do not under any circumstances add any additional reasoning not contained in the latest reasoning step. Your task is only to summarize what is given to you.
+
+  ### PROBLEM AND INSTRUCTIONS
+  {problem}
+
+  ### EXISTING SUMMARY
+  {existing_summary}
+
+  ### LATEST CANDIDATE SOLUTION
+  {reasoning}

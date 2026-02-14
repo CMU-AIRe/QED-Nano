@@ -1,0 +1,104 @@
+.main {
+    display: flex;
+    justify-content: center;
+    width: calc(100% - 450px);
+    height: 100%;
+    margin-left: 450px;
+    padding: 0 24px;
+    box-sizing: border-box;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.sidebar.collapsed + .main {
+    margin-left: 60px; /* Same as collapsed sidebar width */
+    width: calc(100% - 60px);
+}
+
+.main > * {
+    width: min(1200px, 100%);
+}
+
+.dataset-form {
+    display: grid;
+    gap: 12px;
+}
+
+.dataset-form .form-group {
+    gap: 0.35rem;
+}
+
+.dataset-form .form-control {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dataset-form .button-dataset,
+.dataset-form .sidebar-main-button {
+    width: 100%;
+}
+
+.form-hint {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.dataset-field {
+    position: relative;
+}
+
+.dataset-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid #d1d9e6;
+    border-radius: 10px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 50;
+    display: none;
+}
+
+.dataset-suggestions.is-visible {
+    display: block;
+}
+
+.dataset-suggestion-item {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #1f2933;
+}
+
+.dataset-suggestion-item:hover,
+.dataset-suggestion-item.is-active {
+    background: #f1f5f9;
+}
+
+.button-dataset {
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 12px 18px;
+    background-color: #4a5568;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.title {
+    font-size: 2.5rem;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #dee2e6;
+    margin: 5px 0;
+}

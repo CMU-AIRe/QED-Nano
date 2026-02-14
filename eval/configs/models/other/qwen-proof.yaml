@@ -1,0 +1,11 @@
+model: "lm-provers/Qwen3-4B-Thinking-2507-Proof"
+api: custom
+api_key_env: HF_API_KEY
+base_url: http://127.0.0.1:8000/v1
+max_tokens: 145000
+temperature: 0.8
+read_cost: 0.01
+write_cost: 0.04
+concurrent_requests: 32
+delimiters:
+- </think>  # we use the same for all models here for simplicity

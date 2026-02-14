@@ -1,0 +1,18 @@
+model: "lm-provers/DASD-4B-Thinking-Proof"
+model_revision: "v01.00-step-000025"
+api: custom
+api_key_env: VLLM_API_KEY
+base_url: http://localhost:8000/v1
+max_tokens: 35840
+prompt_margin: 5120
+delimiters:
+- </think>  # covers most reasoning models
+- final<|message|> # gpt-oss models
+read_cost: 0.0
+write_cost: 0.0
+concurrent_requests: 16
+human_readable_id: lm-provers/DASD-4B-Thinking-Proof
+date: "2026-01-30"
+temperature: 0.8
+top_p: 1.0
+top_k: -1

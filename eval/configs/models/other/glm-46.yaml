@@ -1,0 +1,8 @@
+model: glm-4.6
+api: glm
+max_tokens: 122880
+concurrent_requests: 60
+temperature: 1
+top_p: null
+read_cost: 0.6
+write_cost: 2.2

@@ -1,0 +1,17 @@
+command_file: null
+commands: null
+compute_environment: LOCAL_MACHINE
+distributed_type: MULTI_GPU
+dynamo_backend: 'NO'
+fsdp_config: {}
+gpu_ids: null
+machine_rank: 0
+main_process_ip: null
+main_process_port: null
+main_training_function: main
+megatron_lm_config: {}
+num_processes: 1
+###########
+num_machines: 1
+rdzv_backend: c10d
+same_network: true

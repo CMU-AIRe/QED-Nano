@@ -1,0 +1,57 @@
+<h2>Problem</h2>
+{% if has_issue %}
+<div class="box issue-box"><b>Issue:</b> {{ issue_message }}</div>
+{% endif %}
+{% if metadata %}
+    <div class="box metadata-box">
+        {% for key, value in metadata.items() %}
+            <b>{{ key }}:</b> {{ value }}<br>
+        {% endfor %}
+    </div>
+{% endif %}
+{% if problem_statement %}
+    <div class="marked box problem-box">{{ problem_statement }}</div>
+{% endif %}
+
+{% if solution %}
+    <div class="marked box solution-box">{{ solution }}</div>
+{% endif %}
+
+{% if model_solution %}
+    <h3>Model Solution</h3>
+{% endif %}
+{% if history is not none and history|length > 0 %}
+<details class="response-box-details strong">
+    <summary>Conversation History:</summary>
+    <div class="history">
+    {% for entry in history %}
+        <div class="message">
+            <div class="tagline">{{ entry.tagline }}</div>
+            {% if entry.type and entry.type == "code" %}
+                <pre class="language-python marked box response-box code"><code>{{ entry.content }}</code></pre>
+            {% else %}
+                <div class="marked box response-box {{ entry.role }} {% if entry.type %} {{ entry.type }} {% endif %}">{{ entry.content }}</div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    </div>
+</details>
+{% endif %}
+
+{% if model_solution %}
+    <div class="marked box response-box">{{ model_solution }}</div>
+{% endif %}
+
+
+
+{% if grading %}
+    <h3>Model Grade:{% if grading.grade is not none %} {{ grading.grade }} / {% endif %} {{ grading.max }} </h3>
+    {% for entry in grading.elements %}
+        <h4>{{ entry.title }}:{% if entry.grade is not none %} {{ entry.grade }} / {% endif %} {{ entry.max }} </h4>
+        <div class="box description-box">{{ entry.description }}</div>
+        {% if entry.grade is not none %}
+            <div class="marked box grading-box {{ entry.correct_indicator }}">{{ entry.content }}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}

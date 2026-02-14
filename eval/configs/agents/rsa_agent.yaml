@@ -1,0 +1,9 @@
+scaffold_name: rsa
+core_components: configs/agents/math_core_components.yaml
+n_threads: 8
+max_concurrent_calls: 8
+select_pairwise: true
+n_solutions: 8
+n_rounds: 3
+block_size: 3
+run_idx: '{solver_path}/rsa_{parameter_hash}_{problem_id}_{run_idx}'

@@ -1,0 +1,18 @@
+model: "lm-provers/Qwen3-4B-Thinking-2507-Proof"
+model_revision: "rc_v11.00-step-000025"
+api: custom
+api_key_env: VLLM_API_KEY
+base_url: http://localhost:8000/v1
+max_tokens: 229376
+prompt_margin: 32768
+delimiters:
+- </think>  # covers most reasoning models
+- final<|message|> # gpt-oss models
+read_cost: 0.0
+write_cost: 0.0
+concurrent_requests: 16
+human_readable_id: lm-provers/Qwen3-4B-Thinking-2507-Proof
+date: "2026-02-11"
+temperature: 0.8
+top_p: 1.0
+top_k: -1

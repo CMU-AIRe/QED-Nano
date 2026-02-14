@@ -1,0 +1,15 @@
+model: "inclusionAI/Ring-1T"
+api: custom
+api_key_env: VLLM_API_KEY
+base_url: http://localhost:8000/v1
+max_tokens: 65024
+delimiters:
+- </think>  # covers most reasoning models
+- final<|message|> # gpt-oss models
+read_cost: 0.0
+write_cost: 0.0
+concurrent_requests: 16
+human_readable_id: inclusionAI/Ring-1T
+date: "2026-01-14"
+temperature: 0.6
+top_p: 0.95

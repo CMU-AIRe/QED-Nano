@@ -1,0 +1,21 @@
+Carefully analyze the given problem statement and the proposed solution, and then write out your analysis regarding the correctness of the proposed solution.
+After the analysis, you must provide a score based on the following criteria:
+- **0 Points (Incorrect):** The solution is completely incorrect or irrelevant.
+- **1 Point (Partial Progress):** The solution is partially correct but has significant errors or omissions.
+- **6 Points (Almost Correct):** The solution is almost correct but contains minor errors or inaccuracies.
+- **7 Points (Correct):** The solution is fully correct and complete.
+
+### Output Requirements
+You must provide your final score in the format <points>N out of 7</points>. Ensure the '<points>' block is used **only once**, as your answer will be parsed based on the first <points> </points> block that appears in your whole response.
+
+**PROBLEM STATEMENT**
+{problem_statement}
+**PROPOSED SOLUTION**
+{student_answer}
+
+Present your detailed thought process and formal justification based on the scoring rubric and grading guidelines, and finally present your final score in the format below.
+[Select one of the following options]
+<points>7 out of 7</points>
+<points>6 out of 7</points>
+<points>1 out of 7</points>
+<points>0 out of 7</points>

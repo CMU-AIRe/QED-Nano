@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title">Select a dataset to get started</h1>
+    <form action="/load" method="post" class="dataset-form" data-dataset-form>
+        <div class="form-group dataset-field">
+            <label for="dataset">Dataset Name</label>
+            <input type="text" class="form-control" id="dataset" name="dataset" placeholder="Search or enter dataset name" autocomplete="off" data-dataset-input>
+            <div class="dataset-suggestions" data-dataset-suggestions></div>
+            <small class="form-hint">Start typing to fetch dataset suggestions.</small>
+        </div>
+        <div class="form-group">
+            <label for="config">Dataset Config (optional)</label>
+            <select class="form-control" id="config" name="config" data-config-input>
+                <option value="">Select config (optional)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="split">Dataset Split</label>
+            <select class="form-control" id="split" name="split" data-split-input>
+                <option value="">Select split (default: train)</option>
+            </select>
+        </div>
+        <button type="submit" class="button-dataset">Load Dataset</button>
+    </form>
+</div>
+{% endblock %}

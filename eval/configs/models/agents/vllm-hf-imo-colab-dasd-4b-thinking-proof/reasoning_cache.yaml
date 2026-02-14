@@ -1,0 +1,4 @@
+type: agent
+model_config: models/vllm/vllm-lm-provers-dasd-4b-thinking-proof
+scaffold_config: agents/reasoning_cache
+human_readable_id: "lm-provers/DASD-4B-Thinking-Proof + reasoning_cache (rc_v00.00-step-000050)"

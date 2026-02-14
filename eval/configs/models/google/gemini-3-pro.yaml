@@ -1,0 +1,16 @@
+model: gemini-3-pro-preview
+api: google
+temperature: null
+top_p: null
+concurrent_requests: 32
+max_tokens: 130000
+read_cost: 2
+tool_choice: auto
+write_cost: 12
+delimiters:
+- </thought>
+extra_body:
+  extra_body:
+    google:
+      thinking_config:
+        include_thoughts: true

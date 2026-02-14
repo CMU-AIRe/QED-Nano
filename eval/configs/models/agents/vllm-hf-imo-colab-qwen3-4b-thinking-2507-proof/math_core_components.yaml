@@ -1,0 +1,4 @@
+type: agent
+model_config: models/vllm/vllm-lm-provers-qwen3-4b-thinking-2507-proof
+scaffold_config: agents/math_core_components
+human_readable_id: "lm-provers/Qwen3-4B-Thinking-2507-Proof + math_core_components (rc_v09.00-step-000200)"

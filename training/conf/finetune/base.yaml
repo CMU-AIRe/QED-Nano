@@ -1,0 +1,117 @@
+data: null
+# Model class. Must be one of the following: causal-language-modeling, seq2seq-language-modeling, vision2seq-language-modeling
+model_class: causal-language-modeling
+# Model name or path of model to be trained.
+config_name: ${..model_path}
+# Optional Hugging Face Hub revision (branch / tag / commit).
+model_revision: ${..model_revision}
+# Optimizer type, supported: adamw_torch, adafactor, cpuadam, lion
+optim: adamw_torch
+# use half precision training, full bf16 without mixed precision copies at all
+load_as_bf16: True
+use_flash_attention: true
+attn_implementation: flash_attention_2
+auto_device_map: False
+#LoRA adapter tuning config
+lora:
+  enabled: False
+  task_type: CAUSAL_LM # supported: CAUSAL_LM, SEQ_2_SEQ_LM
+  base_model_8bit: False # format used for storing base mode weights during forward
+  base_model_4bit: False
+  r: 16 # Lora attention dimension.
+  alpha: 16 # the alpha parameter for Lora scaling.
+  dropout: 0.05 # the dropout probability for Lora layers.
+  bias: "none" # Bias type for Lora. Can be 'none', 'all' or 'lora_only'
+  target_modules: [] # the names of the modules to apply Lora to.
+# Overwrite existing model checkpoints. If False, resume training from existing checkpoint if exists
+force_restart: ${..force_restart}
+# Rewind dataloder to the last used position if training resumed from existing checkpoint
+resume_dataloader: False
+# Batch size for training.
+train_batch_size: 4
+# Batch size for evaluation.
+valid_batch_size: 4
+# Value of weight decay.
+weight_decay: 0.01
+# Learning rate for training.
+learning_rate: 1e-6
+# How much to clip the gradient (no clipping if null)
+gradient_clipping_threshold: 0.3
+# Learning rate scheduler type (indexed by completed_steps).
+lr_scheduler_type: cosine # could be cosine, constant_with_warmup
+# Number of warmup (completed) steps in the learning rate schedule.
+num_warmup_steps: 0
+# Number of gradient accumulation steps.
+gradient_accumulation_passes: 64
+# Use gradient checkpointing to reduce memory footprint.
+gradient_checkpointing: true
+# see https://medium.com/pytorch/how-activation-checkpointing-enables-scaling-up-training-deep-learning-models-7a93ae01ff2d
+# for the motivation to this false by default
+reentrant_checkpointing: false
+# Number of training steps passed to LR scheduler,
+# also the maximum number of steps if interrupt_train_steps is -1
+max_train_steps: 100000
+# Set interrupt_train_steps to the number of steps after which to interrupt training.
+# Using interrupt_train_steps is useful for stopping training before max_train_steps
+# is reached without affecting the LR scheduler.
+# This is useful for testing purposes.
+# Note that interrupt_train_steps is ignored if equal to -1
+interrupt_train_steps: -1
+# Maximum number of evaluation (completed) steps. If -1 the full dataset is evaluated.
+max_eval_steps: -1
+# Sequence lengths used for training.
+seq_length: 20000
+seq_packing: true
+output_dir: ${..output_dir}/finetune
+# Training seed.
+seed: 42
+# Interval to save checkpoints.
+save_checkpoint_steps: 50
+# Whether to keep intermediate checkpoints
+keep_intermediate_checkpoints: True
+# Whether to allow loading external model code
+trust_remote_code: false
+# Whether to empty the cache every training pass. Usually not worth it except for very large models if OOM
+cuda_empty_cache: True
+# Hugging Face Hub upload configuration
+push_to_hub: false
+hub_model_id: null
+hub_model_revision: v00.00
+hub_base_revision: main
+hub_private: true
+hub_ignore_patterns: []
+hub_max_retries: 3
+hub_retry_base_seconds: 5.0
+hub_retry_max_seconds: 60.0
+sft_config_name: null
+n_examples: 0 # 0 means do not limit number of samples
+log_each_n_steps: 1
+also_save_steps: []
+use_safetensors: true
+save_final_training_state: True
+seq_parallel: 1
+objective: rl
+input: training_data
+send_weight_updates: true
+queue_size: 32
+max_lag: ${..max_lag}
+weight_update_interval: 1
+pop_old_data: ${..pop_old_data}
+attempts: 4
+eval_callback:
+  _target_: tapeagents.finetune.eval.dummy_eval_callback
+  config_name: ""
+rl:
+  policy_loss: reinforce
+  divide_advantage_by_std: false
+  kl_coef: 0.0
+  final_kl_coef: ${..rl.kl_coef} 
+  entropy_bonus: 0.0001
+  reward_minus_kl_coef: 0.0
+  epsilon: 4
+  use_advantages: true
+  relu_log_p_weights: false
+  clamp_log_ratio_ref_new_value: 5
+  temperature: ${...llm.parameters.temperature}
+  aggregate_loss: sum
+  overlong_filtering: false

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+    <button class="sidebar-toggle-button" id="sidebar-toggle-button" onclick="toggleSidebar()">
+    &times;
+    </button>
+    <div class="sidebar-content">
+        <div class="load-dataset-form">
+            <form action="/load" method="post" class="dataset-form" data-dataset-form>
+                <div class="form-group dataset-field">
+                    <input type="text" class="form-control" id="dataset" name="dataset" placeholder="Search or enter dataset name" autocomplete="off" data-dataset-input>
+                    <div class="dataset-suggestions" data-dataset-suggestions></div>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="config" name="config" data-config-input>
+                        <option value="">Select config (optional)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="split" name="split" data-split-input>
+                        <option value="">Select split (default: train)</option>
+                    </select>
+                </div>
+                <button type="submit" class="sidebar-main-button button-dataset">Load Dataset</button>
+            </form>
+        </div>
+        <!-- horizontal line -->
+        <hr>
+        <form id="filter-form" class="filter-form" data-dataset-name="{{ dataset_name }}">
+            <div class="filter-main-content">
+                <div id="regex-filters">
+                <h4>Text Filters</h4>
+                {% for col in regex_filterable_columns %}
+                <div class="form-group">
+                    <label for="{{ col }}_filter" class="my-form-label">{{ col | replace("_", " ") | title }}</label>
+                    <input type="text" id="{{ col }}_filter" name="{{ col }}_filter" class="form-control">
+                </div>
+                {% endfor %}
+            </div>
+            <div class="range-filters">
+                <h4>Range Filters</h4>
+                {% for col in range_filterable_columns %}
+                <div class="form-group">
+                    <label for="{{ col }}_min" class="my-form-label">{{ col | replace("_", " ") | title }}</label>
+                    <div class="range-inputs">
+                        <input type="number" id="{{ col }}_min" name="{{ col }}_min" placeholder="min" value="{{ range_default[col][0] }}">
+                        <input type="number" id="{{ col }}_max" name="{{ col }}_max" placeholder="max" value="{{ range_default[col][1] }}">
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+            <div class="boolean-filters">
+                <h4>Boolean Filters</h4>
+                {% for col in boolean_filterable_columns %}
+                <div class="form-group">
+                    <label for="{{ col }}_filter" class="my-form-label">{{ col | replace("_", " ") | title }}</label>
+                    <select id="{{ col }}_filter" name="{{ col }}_filter" class="form-control">
+                        <option value="">Any</option>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+                {% endfor %}
+            </div>
+            </div>
+            
+            <button type="submit" class="sidebar-main-button">Filter</button>
+        </form>
+        <hr>
+        <div id="sidebar-results" class="sidebar-list" style="flex-grow: 1; overflow-y: auto;"></div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div id="problem-container"></div>
+{% endblock %}

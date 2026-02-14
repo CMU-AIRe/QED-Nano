@@ -1,0 +1,348 @@
+# ---------------------
+# Config for:
+#   generation: 3 nodes (19 actor, 4 rc_actor, 1 summarizer gpus)
+#   grader: 0 node (use API instead)
+#   finetuning: 1 node
+# ---------------------
+
+defaults:
+  - streams: files
+  - finetune: grpo 
+  - rewards: pure_success
+  - _self_
+
+seed: 42
+
+# Main model path for RC actor and regular actor
+model_path: Qwen/Qwen3-4B-Thinking-2507
+model_revision: main
+
+# Separate model for summarization (optional)
+# If not set or null, uses the same model as RC actor
+summarization_model_path: Qwen/Qwen3-4B-Instruct-2507
+summarization_model_revision: main
+
+# used to set problem queue size and llm max rollouts for RC actor and regular actor
+n_problems_per_batch: 64 
+
+finetune:
+  seed: ${seed}
+  attempts: 16
+  train_batch_size: 16
+  valid_batch_size: 16
+  gradient_accumulation_passes: 64
+  lr_scheduler_type: constant_with_warmup
+  config_name: ${model_path}
+  model_revision: ${model_revision}
+  num_warmup_steps: 0
+  rl:
+    entropy_bonus: 0.0001
+    final_entropy_bonus: ${finetune.rl.entropy_bonus}
+    overlong_filtering: false
+  seq_length: 53000
+  seq_parallel: 4
+  learning_rate: 1.0e-6
+  save_checkpoint_steps: 5
+  push_to_hub: false
+  hub_model_id: null # fill hub model id (HF path where checkpoints will be saved)
+  hub_model_revision: main
+  hub_ignore_patterns:
+    - "*.pt"
+    - "*.pth"
+
+# evaluation settings
+eval_only: false # set to true to only evaluate the model with RC actor
+skip_first_eval: true
+eval_every_n_versions: 0 # 51200 # evaluate every 51200 / 1024 = 50 steps
+
+# world configuration for a 4 node (32 H100 GPU) setup
+world:
+  replicas: 1
+  # GPU allocation fractions (must sum to <= 8 per node)
+  rc_actor_fraction: 4  # GPUs for RC actor LLMs
+  summarization_fraction: 1  # Set to >0 to use separate summarization LLMs
+  finetune_fraction: 8
+  actor_fraction: 19    # GPUs for regular actor LLMs
+  preprocessor_fraction: 0
+
+  env_replicas: 2
+
+  actor_group_port: 9000
+  environment_start_port: 7777
+
+# RC Actor configuration
+rc_actor:
+  log_each_n_secs: 0
+  problem_queue_size: 32
+  result_queue_size: ${rc_actor.problem_queue_size} 
+  llm_max_rollouts: 20  
+  summarization_max_rollouts: 100 # llm_max_rollouts * world.rc_actor_fraction / world.summarization_fraction 
+  rollout_workers: 1
+  discount_factor: 1
+  throughput_window_size: 50
+  shared_memory_entry_size: 2000000000 # Allow up to 2GB per rollout
+  # Retry settings for transient HTTP errors (connection resets, etc.)
+  max_retries: 10
+  retry_base_delay: 1.0
+  
+  # RC-specific configuration
+  num_reasoning_steps: 3  # Number of reasoning/summarization cycles
+  attempts: 1  # Number of attempts per problem (for training use 1)
+
+  # Solution and summarization rollout policies
+  solution_rollout_policy: pipelinerl.domains.math.rollouts.generate_math_rollout_rc
+  summarization_rollout_policy: pipelinerl.domains.math.rollouts.generate_summarization_rollout
+
+  # Prompt template files (loaded from files)
+  system_prompt: null
+  reasoning_prompt_file: prompts/sum_e2e_complete_reasoning_prompt.txt
+  summarization_prompt_file: prompts/sum_e2e_complete_summarization_prompt.txt
+  
+  # Task template for formatting the problem
+  task_template: |-
+    {task}
+
+  # RC specific Model configuration
+  use_think_tags: false
+  model_class: "qwen"  # Options: "qwen", "gptoss", etc.
+  reasoning_prompt_style: "structured"  # Options: "structured", "completion"
+  summarization_style: "summ"  # Options: "summ", "sequential"
+
+# Regular Actor configuration - now reads from RC actor stream
+actor:
+  # Enable reading from RC actor stream
+  use_rc_stream: true
+  rc_stream_topic: "rc_actor"  # Topic name where RC actor writes
+  rc_stream_samples_per_batch: 2  # Number of reasoning samples to subsample per problem (out of num_reasoning_steps + 1 states)
+  
+  log_each_n_secs: 0
+  problem_queue_size: ${n_problems_per_batch} 
+  result_queue_size: 128  # Increased to prevent blocking when groups complete
+  llm_max_rollouts: 24  
+  rollout_workers: 1
+  discount_factor: 1
+  throughput_window_size: 50
+  shared_memory_entry_size: 2000000000 # Allow up to 2GB per rollout
+  # Retry settings for transient HTTP errors (connection resets, etc.)
+  max_retries: 10
+  retry_base_delay: 1.0
+  
+  # Regular rollout policy (used for K attempts per RC state)
+  rollout_policy: pipelinerl.domains.math.rollouts.generate_math_rollout
+  system_prompt: null
+
+  # task template for formatting the problem
+  task_template: |-
+    {task}
+preprocess:
+  input: actor  # Preprocessor reads from regular actor as before
+  output: training_data
+  n_workers: 16
+  chunk_n_groups: 2
+  # queue for loaded raw groups
+  raw_queue_size: 8
+  # queue for processed chunks of multiple groups  
+  input_queue_size: 32
+  # queue for ready chunks for multiple groups
+  output_queue_size: 32
+  # queue for accumulating samples before further processing
+  dataset_buffer_size: 0
+  # ring buffer to replace old samples with new ones when training is slow
+  ring_buffer_size: 128
+  # "virtual" sample queue per lead trainer
+  max_ready_samples_per_lead: 256
+  pop_old_data: ${..pop_old_data} 
+  shared_memory_entry_size: 2000000000 # Allow up to 2GB per rollout
+  log_every_n_samples: 128
+
+# LLM parameters for RC actor (solution generation)
+llm:
+  parameters:
+    max_tokens: 49152 
+    temperature: 0.8 
+  reasoning_delimiters: ["</think>"]
+  wandb_table:
+    enabled: true
+    keep_last_k_groups: 32
+    log_every_n_groups: 32
+
+actor_llm:
+  parameters:
+    max_tokens: 49152
+    temperature: 0.8
+  reasoning_delimiters: ["</think>"]
+  wandb_table:
+    enabled: true
+    keep_last_k_groups: 32
+    log_every_n_groups: 32
+
+test_llm:
+  parameters: 
+    max_tokens: 49152
+    temperature: 0.8
+    top_p: 0.95
+    top_k: 20
+
+# LLM parameters for summarization (optional)
+# If not set, uses the same parameters as solution generation
+summarization_llm:
+  parameters:
+    max_tokens: 2048
+    temperature: 0.7
+    top_p: 0.8
+    top_k: 20
+
+# vLLM configuration for RC actor LLMs
+rc_actor_vllm_config:
+  use_v1: false
+  vllm_kwargs:
+    dtype: bfloat16
+    gpu-memory-utilization: 0.9
+    num-scheduler-steps: 1
+    disable-log-requests: ""
+    disable-frontend-multiprocessing: ""
+    max-num-seqs: ${rc_actor.llm_max_rollouts}
+    max-num-batched-tokens: 16384
+    max-model-len: ${finetune.seq_length}
+    no-enable-prefix-caching: ""
+    enable-chunked-prefill: ""
+    return-tokens-as-token-ids: ""
+    generation-config: vllm
+    tensor-parallel-size: 1
+
+# vLLM configuration for summarization LLMs 
+summarization_vllm_config:
+  use_v1: false
+  vllm_kwargs:
+    dtype: bfloat16
+    gpu-memory-utilization: 0.9
+    num-scheduler-steps: 1
+    disable-log-requests: ""
+    disable-frontend-multiprocessing: ""
+    max-num-seqs: ${rc_actor.summarization_max_rollouts}
+    max-num-batched-tokens: 16384
+    max-model-len: ${finetune.seq_length}
+    no-enable-prefix-caching: ""
+    enable-chunked-prefill: ""
+    return-tokens-as-token-ids: ""
+    generation-config: vllm
+    tensor-parallel-size: 1
+
+
+# vLLM configuration for generation/actor LLMs
+vllm_config:
+  use_v1: false
+  vllm_kwargs:
+    dtype: bfloat16
+    gpu-memory-utilization: 0.9
+    num-scheduler-steps: 1
+    disable-log-requests: ""
+    disable-frontend-multiprocessing: ""
+    max-num-seqs: ${actor.llm_max_rollouts}
+    max-num-batched-tokens: 16384
+    max-model-len: ${finetune.seq_length}
+    no-enable-prefix-caching: ""
+    enable-chunked-prefill: ""
+    return-tokens-as-token-ids: ""
+    generation-config: vllm
+    tensor-parallel-size: 1
+    pipeline-parallel-size: 1
+
+    
+# this will be autocreated based on the config
+jobs: []
+
+
+
+# will use default based on the chosen backend
+accelerate_config: null
+use_deepspeed: true
+deepspeed_config: deepspeed_stage3_bf16
+use_fsdp: false
+fsdp:
+  param_dtype: fp32
+  reduce_dtype: fp32
+  buffer_dtype: fp32
+
+output_dir: ???
+force_restart: false
+pop_old_data: true
+max_lag: null
+attempts: ${finetune.attempts}
+train_subset: null
+
+# Dataset configuration
+dataset_loader: pipelinerl.domains.math.load_datasets
+dataset_loader_params:
+  seed: 42
+train_dataset_names:
+  - hub_id: lm-provers/FineProofs-RL
+    split: train
+test_dataset_names:
+  - hub_id: lm-provers/FineProofs-RL-test
+    split: test
+
+
+debug:
+  mode: ""
+  streams_from: null
+  place_inference_workers: true
+  use_existing_llms: false
+
+me:
+  # This will be autopopulated
+  job_idx: null
+
+hydra:
+  run:
+    dir: ${output_dir}
+
+wandb:
+  use_wandb: true
+  wandb_id: null
+  wandb_name: null
+  # W&B entity name
+  wandb_entity_name: null
+  # W&B project name
+  wandb_project_name: pipeline-rl
+  # W&B resume policy
+  wandb_resume: always
+  # Whether to use only the basename or the full path as the run name
+  wandb_use_basename: True
+  wandb_workspace_root: null
+  # set the group in your config
+  wandb_group: null
+  wandb_dir: null
+  # Comma-separated list of keywords to tag the run.
+  tags: []
+  # Whether to log the verifier table to W&B, setting it to false to prevent wandb local directory growth
+  log_verifier_table: true
+
+environment:
+  _target_: pipelinerl.domains.math.MathProofEnvironment
+  model_name: ${llm_grader.name}
+  sampling_kwargs: ${llm_grader.sampling_kwargs}
+  prompt_name: ${llm_grader.prompt_name}
+  
+llm_grader:
+  local: false # set to false to run via inference endpoints
+  name: openai/gpt-oss-20b 
+  vllm_kwargs:
+    num_nodes: 1
+    data-parallel-size: 8
+    tensor-parallel-size: 1
+    max-num-batched-tokens: 24576
+    max-num-seqs: 64
+    max-model-len: 98304
+    gpu-memory-utilization: 0.9
+  sampling_kwargs:
+    temperature: 1.0
+    max_output_tokens: 81920
+    reasoning:
+      effort: medium
+  reasoning_delimiters: ["</think>"]
+  prompt_name: v1
+  wandb_table:
+    enabled: true
+    keep_last_k_groups: 32
+    log_every_n_groups: 32

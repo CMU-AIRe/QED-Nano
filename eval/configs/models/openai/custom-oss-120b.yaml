@@ -1,0 +1,10 @@
+model: "openai/gpt-oss-120b"
+api: custom
+api_key_env: TOGETHER_API_KEY # optional environment variable name for the API key (required if API needs a key)
+base_url: https://api.together.xyz/v1
+max_tokens: 110000
+read_cost: 0.15
+write_cost: 0.60
+concurrent_requests: 16
+reasoning_effort: high
+date: "2025-08-05"

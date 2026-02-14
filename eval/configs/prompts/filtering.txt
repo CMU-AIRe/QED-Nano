@@ -1,0 +1,36 @@
+Your task is to classify this mathematical problem and solution among various categories. These problems and solutions were scraped automatically and therefore sometimes contain mistakes or inaccuracies.
+Your feedback will be used to further filter the data to only keep high-quality samples.
+
+You will need to output a json object with the following keys:
+- **incomplete** (bool): If either the problem or solution is incomplete, you should mark this as true. This can occur if the solution only addresses part of the question, does not address the question at all, or if the question omits critical information without which certain quantities cannot be understood.
+- **difficulty** (int): an integer between 1 and 10 that indicates the difficulty of the problem. 1 indicates low difficulty questions on par with questions you would expect on the AMC. 4 are questions from national contests, 7 are the most difficult questions from national contests and the easiest questions from the IMO. 10 are the hardest questions from the IMO.
+- **gaps** (bool): This key should indicate whether the solution contains major gaps by considering several important aspects of the proof trivial or easy. Note, you should only mark this if the gaps are significant, and would form a big part of the proof if worked out.
+- **wrong** (bool): If the solution in any way indicates that the problem statement is ambiguous or wrong, you should mark this feature.
+- **disagreement** (bool): You will also see alternative solutions posted for the problem. If these alternative solutions/comments showcase disagreement on the accuracy of the selected solution, you should mark this. Note, it is is possible and allowed that there are several different approaches to the same problem. This field should only be marked if a user specifically points out a mistake or disagrees with the selected solution.
+- **computational** (bool): Is the main difficulty of the problem related to computing or evaluating a certain expression? We are interested in proof-based problems where the difficulty also lies in proving that the answer is X. Problems that are purely computational should therefore be excluded.
+
+Format your reply as follows:
+```json
+{{
+    "incomplete": {{true/false}},
+    "difficulty": {{1/2/3/4/5/6/7/8/9/10}},
+    "gaps": {{true/false}},
+    "wrong": {{true/false}},
+    "disagreement": {{true/false}},
+    "computational": {{true/false}}
+}}
+```
+
+DO NOT forget the backticks (```json etc.) when you format your reply, they should be included.
+
+### Problem
+{problem}
+
+### Selected solution
+{solution}
+
+### Problem Source
+{path}
+
+### Alternative Solutions and Other Comments
+{comments}

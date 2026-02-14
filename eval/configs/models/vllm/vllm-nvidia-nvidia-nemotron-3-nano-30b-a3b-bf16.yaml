@@ -1,0 +1,13 @@
+model: "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
+api: custom
+api_key_env: VLLM_API_KEY
+base_url: http://localhost:8000/v1
+max_tokens: 261632
+delimiters:
+- </think>  # covers most reasoning models
+- final<|message|> # gpt-oss models
+read_cost: 0.0
+write_cost: 0.0
+concurrent_requests: 16
+human_readable_id: nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16
+date: "2026-01-17"

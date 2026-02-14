@@ -1,0 +1,13 @@
+model: "openai/gpt-oss-120b"
+api: custom
+api_key_env: VLLM_API_KEY
+base_url: http://localhost:8000/v1
+max_tokens: 126976
+delimiters:
+- </think>  # we use the same for all models here for simplicity
+read_cost: 0.0
+write_cost: 0.0
+concurrent_requests: 16
+temperature: 1.0
+top_p: 1.0
+top_k: -1

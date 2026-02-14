@@ -1,0 +1,4 @@
+type: agent
+model_config: models/vllm/vllm-openai-gpt-oss-120b_high
+scaffold_config: agents/deepseek_math
+human_readable_id: "openai/gpt-oss-120b + deepseek_math (main)"

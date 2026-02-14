@@ -1,0 +1,15 @@
+model: "Qwen/Qwen3-4B-Thinking-2507"
+model_revision: "main"
+api: custom
+api_key_env: VLLM_API_KEY
+base_url: http://localhost:8000/v1
+max_tokens: 229376
+prompt_margin: 32768
+delimiters:
+- </think>  # covers most reasoning models
+- final<|message|> # gpt-oss models
+read_cost: 0.0
+write_cost: 0.0
+concurrent_requests: 16
+human_readable_id: Qwen/Qwen3-4B-Thinking-2507
+date: "2026-02-06"

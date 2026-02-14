@@ -1,0 +1,130 @@
+# ---------------------
+# Config for:
+#   generation: 2 nodes
+#   grader: 0 node (use API instead)
+#   finetuning: 2 nodes
+# ---------------------
+defaults:
+    - base
+    - _self_
+
+model_path: hf-imo-colab/Qwen3-4B-Thinking-2507-SFT
+model_revision: v08.00-step-000000372
+
+eval_every_n_versions: 12800
+
+preprocess:
+  shared_memory_entry_size: 2000000000
+
+finetune:
+  attempts: 16
+  train_batch_size: 32
+  valid_batch_size: 32
+  gradient_accumulation_passes: 32
+  seq_length: 49920
+  seq_parallel: 2
+  learning_rate: 1.0e-6
+  lr_scheduler_type: constant_with_warmup
+  num_warmup_steps: 0
+  rl:
+    entropy_bonus: 0.0001
+    final_entropy_bonus: ${finetune.rl.entropy_bonus}
+    overlong_filtering: false
+  save_checkpoint_steps: 5
+  push_to_hub: false
+  hub_model_id: null # fill hub model id (HF path where checkpoints will be saved)
+  hub_model_revision: main
+  hub_ignore_patterns:
+    - "*.pt"
+    - "*.pth"
+
+llm:
+  parameters:
+    max_tokens: 49152 
+    temperature: 0.8
+  reasoning_delimiters: ["</think>"]
+  wandb_table:
+    enabled: true
+    keep_last_k_groups: 32
+    log_every_n_groups: 32
+# Sampling params taken from Qwen3 tech report: https://arxiv.org/abs/2505.09388
+test_llm:
+  parameters: 
+    max_tokens: 49152
+    temperature: 0.8 
+    top_p: 0.95
+    top_k: 20
+
+llm_grader:
+  local: false # set to false to run via inference endpoints
+  name: openai/gpt-oss-20b 
+  vllm_kwargs:
+    num_nodes: 1
+    data-parallel-size: 8
+    tensor-parallel-size: 1
+    max-num-batched-tokens: 24576
+    max-num-seqs: 64
+    max-model-len: 98304
+    gpu-memory-utilization: 0.9
+  sampling_kwargs:
+    temperature: 1.0
+    max_output_tokens: 81920
+    reasoning:
+      effort: medium
+  reasoning_delimiters: ["</think>"]
+  prompt_name: v1
+  wandb_table:
+    enabled: true
+    keep_last_k_groups: 32
+    log_every_n_groups: 32
+
+
+actor:
+  llm_max_rollouts: 20 # Larger values exhaust the KV cache and lead to preemptions
+  max_retries: 10
+  shared_memory_entry_size: 2000000000 # Allow up to 2GB per rollout
+  rollout_policy: pipelinerl.domains.math.generate_math_rollout
+  system_prompt: null
+  task_template: |-
+    Generate a rigorous proof to the following question:
+
+    {task}
+environment:
+  _target_: pipelinerl.domains.math.MathProofEnvironment
+  model_name: ${llm_grader.name}
+  sampling_kwargs: ${llm_grader.sampling_kwargs}
+  prompt_name: ${llm_grader.prompt_name}
+dataset_loader: pipelinerl.domains.math.load_datasets
+dataset_loader_params:
+  seed: 42
+train_dataset_names:
+  - hub_id: lm-provers/FineProofs-RL
+    split: train
+test_dataset_names:
+  - hub_id: lm-provers/FineProofs-RL-test
+    split: test
+  
+vllm_config:
+  use_v1: false
+  vllm_kwargs:
+    dtype: bfloat16
+    gpu-memory-utilization: 0.9
+    num-scheduler-steps: 1
+    disable-log-requests: ""
+    disable-frontend-multiprocessing: ""
+    max-num-seqs: ${actor.llm_max_rollouts}
+    max-num-batched-tokens: 16384
+    max-model-len: ${finetune.seq_length}
+    return-tokens-as-token-ids: ""
+    tensor-parallel-size: 1
+    pipeline-parallel-size: 1
+    generation-config: vllm
+
+world:
+  replicas: 1
+  actor_fraction: 24
+  preprocessor_fraction: 0
+  finetune_fraction: 8
+  env_replicas: 1
+  actor_group_port: 9000
+  environment_start_port: 7777
