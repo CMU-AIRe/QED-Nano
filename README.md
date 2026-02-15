@@ -23,7 +23,7 @@ This repository contains the full training and evaluation stack for QED-Nano, in
 ## 🚀 Quick Links
 
 - **Model**: [lm-provers/QED-Nano](https://huggingface.co/lm-provers/QED-Nano) on Hugging Face
-- **Blog Post**: [QED-Nano: Nearing Gemini 3 Pro on Olympiad Math Proofs with a 4B Model](https://www.notion.so/QED-Nano-Nearing-Gemini-3-Pro-on-Olympiad-Math-Proofs-with-a-4B-Model-2bd1951bd76780b4bcd5e6b25e34493d)
+- **Blog Post**: [QED-Nano: Teaching a Tiny Model to Prove Hard Theorems](https://huggingface.co/spaces/lm-provers/qed-nano-blogpost)
 
 ## 📦 Training Data
 
