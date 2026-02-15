@@ -12,7 +12,7 @@
   </a>
 </div>
 
-# QED-Nano: Nearing Gemini 3 Pro on Olympiad Math Proofs with a 4B Model
+# QED-Nano: Teaching a Tiny Model to Prove Hard Theorems
 
 QED-Nano is a compact 4B-parameter language model explicitly post-trained for Olympiad-level mathematical proof generation. By combining high-quality supervised fine-tuning with long-horizon reinforcement learning and structured test-time compute, QED-Nano significantly strengthens proof-writing capabilities in small models.
 
@@ -60,11 +60,12 @@ For instructions on evaluating models on our benchmarks, see the [evaluation REA
 If you use QED-Nano in your research, please cite:
 
 ```bibtex
-@article{qednano2026,
-  title={QED-Nano: Nearing Gemini 3 Pro on Olympiad Math Proofs with a 4B Model},
-  author={},
-  journal={},
-  year={2026}
+@misc{qednano2026,
+  title        = {QED-Nano: Nearing Gemini 3 Pro on Olympiad Math Proofs with a 4B Model},
+  author       = {LM-Provers and Yuxiao Qu and Amrith Setlur and Jasper Dekoninck and Edward Beeching and Jia Li and Ian Wu and Lewis Tunstall and Aviral Kumar},
+  year         = {2026},
+  howpublished = {https://huggingface.co/spaces/lm-provers/qed-nano-blogpost},
+  note         = {Blog post}
 }
 ```
 
