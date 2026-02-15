@@ -61,7 +61,7 @@ If you use QED-Nano in your research, please cite:
 
 ```bibtex
 @misc{qednano2026,
-  title        = {QED-Nano: Nearing Gemini 3 Pro on Olympiad Math Proofs with a 4B Model},
+  title        = {QED-Nano: Teaching a Tiny Model to Prove Hard Theorems},
   author       = {LM-Provers and Yuxiao Qu and Amrith Setlur and Jasper Dekoninck and Edward Beeching and Jia Li and Ian Wu and Lewis Tunstall and Aviral Kumar},
   year         = {2026},
   howpublished = {https://huggingface.co/spaces/lm-provers/qed-nano-blogpost},
